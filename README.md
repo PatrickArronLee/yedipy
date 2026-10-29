@@ -1,6 +1,12 @@
 # YediPy
 
-YediPy is a Python library for lossless X12 EDI parsing and safe structural validation. It includes typed models for the healthcare transaction sets in X12 releases `004010`, `005010`, and `005010` pre-errata (270, 271, 276, 277, 277A, 278, 820, 820 HIX, 834, 835, 837D, 837I, 837P, and 999), plus a hand-written `005010X279A1` 270 parser with hierarchy validation.
+**X12 EDI, as typed Python objects.**
+
+YediPy is a free, MIT-licensed Python library for reading, inspecting, and structurally validating X12 EDI. Preserve the original bytes while working with named fields, typed values, and structured diagnostics.
+
+It includes 32 healthcare transaction models across X12 `004010`, `005010`, and `005010` pre-errata, covering eligibility, claim status, authorizations, enrollment, payments, claims, and acknowledgments.
+
+**Supported transaction families:** 270, 271, 276, 277, 277A, 278, 820, 820 HIX, 834, 835, 837D, 837I, 837P, and 999. Availability varies by release; see the [transaction coverage table](https://patrickarronlee.github.io/yedipy/transactions/).
 
 ## What It Does
 
@@ -8,19 +14,20 @@ YediPy is a Python library for lossless X12 EDI parsing and safe structural vali
 - Preserves the original source bytes, segment order, elements, and byte offsets.
 - Validates ISA/IEA, GS/GE, and ST/SE nesting, control numbers, and counts.
 - Slices one interchange into ordered ST/SE transactions.
-- Parses 32 transaction sets across three releases into generated Pydantic models with snake_case attributes and OpenFoo aliases.
-- Parses the 270 hierarchy with `HL` parent validation.
+- Provides a shared parsing API for all supported transaction models.
+- Builds typed Pydantic objects with snake_case attributes and JSON serialization.
+- Checks required fields, numeric values, and field lengths in typed transaction models.
 - Emits diagnostics without including source values.
 
 ## Install
 
-After the first PyPI release:
+Requires Python 3.11 or newer.
 
 ```shell
 python -m pip install yedipy
 ```
 
-From a checkout:
+For development:
 
 ```shell
 python -m pip install -e ".[dev]"
@@ -33,7 +40,9 @@ yedipy x12 inspect input.edi
 yedipy x12 validate input.edi --transaction 270
 ```
 
-`inspect` returns structural JSON only. `validate` returns JSON diagnostics and exits with `0` for valid input, `2` for validation failures, and `3` when the input cannot be read.
+`inspect` reports envelope structure for X12 files without printing source values. The `validate` command currently supports 270 eligibility requests; use the Python API below to parse any supported transaction model.
+
+Both commands return JSON and exit with `0` when their checks pass, `2` for parsing or validation failures, and `3` when the input cannot be read.
 
 ## Python API
 
@@ -41,27 +50,24 @@ yedipy x12 validate input.edi --transaction 270
 from pathlib import Path
 
 from yedipy.x12 import parse_x12
-from yedipy.x12.transactions.v5010 import parse_270
+from yedipy.x12.transactions import parse_transaction
 
-result = parse_x12(Path("request.edi").read_bytes())
+result = parse_x12(Path("claims.edi").read_bytes())
 result.raise_for_errors()
 
 interchange = result.interchange
 assert interchange is not None
 
-typed = parse_270(interchange.transactions[0], interchange.delimiters)
-assert typed.transaction is not None
+raw = interchange.transactions[0]
+typed = parse_transaction(raw, interchange.delimiters)
+if typed.errors:
+    raise ValueError([diagnostic.code for diagnostic in typed.errors])
+
+transaction = typed.transaction  # A typed model for the selected transaction.
+assert transaction is not None
 ```
 
-Any supported transaction set:
-
-```python
-from yedipy.x12.transactions import parse_transaction
-
-claims = parse_transaction(interchange.transactions[0], interchange.delimiters)
-claims.errors
-claims.transaction  # e.g. yedipy.x12.transactions.v5010.ts837p.TS837P
-```
+For `004010`, supply the implementation version from `GS08` using the `implementation_version` argument. See the [parsing guide](https://patrickarronlee.github.io/yedipy/transactions/) for examples.
 
 ## Documentation
 
@@ -72,9 +78,11 @@ claims.transaction  # e.g. yedipy.x12.transactions.v5010.ts837p.TS837P
 - [EDI to Python object model](https://patrickarronlee.github.io/yedipy/edi-to-python.html)
 - [Publishing](https://patrickarronlee.github.io/yedipy/publishing/)
 
-## Status
+## Validation Scope
 
-YediPy is pre-release software. It is not a payer-ready eligibility workflow, a FHIR mapper, or a complete X12 implementation.
+YediPy 0.1 provides structural validation, not complete implementation-guide compliance. Situational rules, external code lists, and cross-segment requirements are not comprehensively enforced. Additional HL parent/child checks are available for `005010X279A1` 270 requests.
+
+HL7 v2 and FHIR interoperability are on the roadmap; they are not implemented in this release.
 
 ## License
 
