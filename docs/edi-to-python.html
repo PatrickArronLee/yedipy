@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="How YediPy turns lossless X12 EDI into inspectable Python and Pydantic objects."
+    >
+    <title>EDI Becomes a Python Object | YediPy</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap");
+
+      :root {
+        --ink: #13221e;
+        --muted: #5d6d67;
+        --paper: #f5f1e8;
+        --mint: #d8f2e4;
+        --teal: #14665d;
+        --coral: #e1694d;
+        --line: #c5d1c9;
+        --code: #102922;
+        --code-ink: #e2f8ed;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          linear-gradient(90deg, rgba(20, 102, 93, 0.055) 1px, transparent 1px),
+          linear-gradient(rgba(20, 102, 93, 0.055) 1px, transparent 1px),
+          var(--paper);
+        background-size: 28px 28px;
+        font-family: "DM Sans", "Trebuchet MS", sans-serif;
+      }
+
+      code,
+      pre {
+        font-family: "DM Mono", "Cascadia Code", monospace;
+      }
+
+      .shell {
+        width: min(1140px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(245, 241, 232, 0.88);
+        backdrop-filter: blur(12px);
+      }
+
+      .masthead {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .mark {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--teal);
+        color: var(--teal);
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+      }
+
+      .rail {
+        color: var(--muted);
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+      }
+
+      main {
+        padding: 74px 0 88px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+        gap: 52px;
+        align-items: end;
+        padding-bottom: 72px;
+      }
+
+      .eyebrow {
+        margin: 0 0 16px;
+        color: var(--teal);
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 700px;
+        margin-bottom: 22px;
+        font-size: clamp(46px, 7vw, 86px);
+        line-height: 0.94;
+        letter-spacing: 0;
+      }
+
+      h1 code {
+        color: var(--teal);
+        font-size: 0.75em;
+      }
+
+      .lede {
+        max-width: 580px;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.55;
+      }
+
+      .promise {
+        padding: 24px;
+        border-top: 4px solid var(--coral);
+        background: var(--mint);
+      }
+
+      .promise p:last-child {
+        margin-bottom: 0;
+      }
+
+      .promise strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+
+      .transform {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr);
+        gap: 16px;
+        align-items: stretch;
+        margin-bottom: 76px;
+      }
+
+      .pane {
+        min-width: 0;
+        border: 1px solid var(--line);
+        background: #fffdf8;
+      }
+
+      .pane-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+      }
+
+      .tag {
+        color: var(--teal);
+        font-weight: 500;
+      }
+
+      pre {
+        overflow: auto;
+        margin: 0;
+        padding: 22px;
+        background: var(--code);
+        color: var(--code-ink);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .arrow {
+        display: grid;
+        place-items: center;
+        color: var(--coral);
+        font-family: "DM Mono", monospace;
+        font-size: 40px;
+      }
+
+      .caption {
+        padding: 15px 16px 17px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      h2 {
+        margin-bottom: 24px;
+        font-size: clamp(28px, 4vw, 42px);
+        line-height: 1;
+      }
+
+      .principles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        border: 1px solid var(--line);
+        background: var(--line);
+      }
+
+      .principle {
+        min-height: 210px;
+        padding: 28px;
+        background: #fffdf8;
+      }
+
+      .number {
+        display: block;
+        margin-bottom: 42px;
+        color: var(--coral);
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+      }
+
+      .principle h3 {
+        margin: 0 0 10px;
+        font-size: 20px;
+      }
+
+      .principle p {
+        margin-bottom: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .object-map {
+        margin-top: 76px;
+        padding: 38px;
+        background: var(--teal);
+        color: #f7fff9;
+      }
+
+      .object-map h2 {
+        margin-bottom: 14px;
+      }
+
+      .object-map > p {
+        max-width: 620px;
+        color: #cde6da;
+        line-height: 1.55;
+      }
+
+      .map-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 30px;
+      }
+
+      .map-cell {
+        min-height: 132px;
+        padding: 18px;
+        border: 1px solid rgba(247, 255, 249, 0.3);
+      }
+
+      .map-cell code {
+        display: block;
+        margin-bottom: 12px;
+        color: #fff;
+        font-size: 14px;
+      }
+
+      .map-cell span {
+        color: #cde6da;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .close {
+        margin-top: 78px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.5;
+      }
+
+      .close strong {
+        color: var(--ink);
+      }
+
+      @media (max-width: 760px) {
+        .shell {
+          width: min(100% - 28px, 1140px);
+        }
+
+        .rail {
+          display: none;
+        }
+
+        main {
+          padding-top: 46px;
+        }
+
+        .hero,
+        .transform {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
+        .arrow {
+          min-height: 32px;
+          transform: rotate(90deg);
+        }
+
+        .principles,
+        .map-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .principle {
+          min-height: 0;
+        }
+
+        .number {
+          margin-bottom: 24px;
+        }
+
+        .object-map {
+          padding: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="shell masthead">
+        <div class="brand"><span class="mark">Y</span> YediPy</div>
+        <div class="rail">X12 / 270 / Python object model</div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">The translation is not a black box</p>
+          <h1>EDI becomes a <code>Python object</code>.</h1>
+          <p class="lede">
+            YediPy keeps the original X12 intact, then gives Python a structured, typed view of
+            the transaction. The interchange remains traceable all the way through.
+          </p>
+        </div>
+        <aside class="promise">
+          <strong>Nothing gets quietly erased.</strong>
+          <p>
+            Source bytes, segment order, element positions, unknown segments, and safe
+            diagnostics stay available alongside the typed result.
+          </p>
+        </aside>
+      </section>
+
+      <section class="transform" aria-label="EDI to Python transformation">
+        <article class="pane">
+          <div class="pane-head"><span class="tag">INPUT</span><span>lossless X12</span></div>
+          <pre>ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *...
+GS*HS*SENDER*RECEIVER*20240101*1200*1*X*005010X279A1~
+ST*270*0001*005010X279A1~
+BHT*0022*13*TRACE001*20240101*1200~
+HL*1**20*1~
+NM1*PR*2*PAYER*****PI*12345~
+HL*2*1*21*1~
+HL*3*2*22*0~
+NM1*IL*1*DOE*JANE****MI*MEMBER01~
+EQ*30~</pre>
+          <div class="caption">The original payload is retained byte-for-byte after lexing.</div>
+        </article>
+
+        <div class="arrow" aria-hidden="true">&#8594;</div>
+
+        <article class="pane">
+          <div class="pane-head"><span class="tag">OUTPUT</span><span>typed Python</span></div>
+          <pre>parsed = parse_x12(edi_bytes)
+interchange = parsed.interchange
+
+typed = parse_270(
+    interchange.transactions[0],
+    interchange.delimiters,
+)
+
+subscriber = (
+    typed.transaction
+    .information_sources[0]
+    .receivers[0]
+    .subscribers[0]
+)
+
+subscriber.name.name  # "DOE"</pre>
+          <div class="caption">A supported 270 becomes an immutable Pydantic object hierarchy.</div>
+        </article>
+      </section>
+
+      <section>
+        <p class="eyebrow">Why it matters</p>
+        <h2>Useful structure without losing the evidence.</h2>
+        <div class="principles">
+          <article class="principle">
+            <span class="number">01</span>
+            <h3>Lossless first</h3>
+            <p>The raw interchange is still there when a downstream decision needs provenance.</p>
+          </article>
+          <article class="principle">
+            <span class="number">02</span>
+            <h3>Typed where known</h3>
+            <p>Supported 270 hierarchy becomes named Python fields instead of positional strings.</p>
+          </article>
+          <article class="principle">
+            <span class="number">03</span>
+            <h3>Safe when broken</h3>
+            <p>Diagnostics expose structural locations, not member data or raw field values.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="object-map">
+        <p class="eyebrow">The objects you receive</p>
+        <h2>From transport syntax to a navigable model.</h2>
+        <p>
+          Start with a generic interchange, narrow to an ST/SE transaction, and then ask for a
+          typed implementation-specific model.
+        </p>
+        <div class="map-grid">
+          <article class="map-cell">
+            <code>X12Interchange</code>
+            <span>Source bytes, delimiters, ordered segments, and transactions.</span>
+          </article>
+          <article class="map-cell">
+            <code>RawTransaction</code>
+            <span>One lossless ST/SE slice with its control information.</span>
+          </article>
+          <article class="map-cell">
+            <code>Transaction270</code>
+            <span>A typed eligibility inquiry rooted in its original transaction.</span>
+          </article>
+          <article class="map-cell">
+            <code>SubscriberLevel</code>
+            <span>Subscriber identity, inquiries, dependents, and raw segment references.</span>
+          </article>
+        </div>
+      </section>
+
+      <p class="close">
+        <strong>YediPy does not pretend EDI is easy.</strong> It makes it inspectable, testable,
+        and usable in Python without severing the connection to the original transaction.
+      </p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yedipy"
+version = "0.1.0"
+description = "Lossless X12 EDI parsing for Python"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Patrick Arron Lee" }]
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.11"]
+keywords = ["edi", "healthcare", "hipaa", "x12", "x12-270"]
+classifiers = [
+	"Development Status :: 2 - Pre-Alpha",
+	"Intended Audience :: Developers",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Text Processing",
+]
+
+[project.urls]
+Documentation = "https://patrickarronlee.github.io/yedipy/"
+Source = "https://github.com/PatrickArronLee/yedipy"
+Issues = "https://github.com/PatrickArronLee/yedipy/issues"
+Changelog = "https://github.com/PatrickArronLee/yedipy/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+	"build>=1.2",
+	"mkdocs-material>=9.6",
+	"pytest>=8.3",
+	"pyright>=1.1.390",
+	"ruff>=0.8",
+	"twine>=6.1",
+]
+
+[project.scripts]
+yedipy = "yedipy.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pyright]
+include = ["src"]
+pythonVersion = "3.11"
+typeCheckingMode = "strict"

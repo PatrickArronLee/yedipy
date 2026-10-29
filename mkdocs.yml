@@ -1,0 +1,40 @@
+site_name: YediPy
+site_description: Lossless X12 EDI parsing for Python
+site_url: https://patrickarronlee.github.io/yedipy/
+repo_url: https://github.com/PatrickArronLee/yedipy
+repo_name: PatrickArronLee/yedipy
+copyright: YediPy is released under the <a href="https://github.com/PatrickArronLee/yedipy/blob/main/LICENSE">MIT License</a>.
+theme:
+  name: material
+  custom_dir: overrides
+  font: false
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+markdown_extensions:
+  - attr_list
+  - md_in_html
+nav:
+  - Home: index.md
+  - Overview: overview.md
+  - Getting Started: getting-started.md
+  - Transaction Sets: transactions.md
+  - X12 270: x12-270.md
+  - API: api.md
+  - Publishing: publishing.md

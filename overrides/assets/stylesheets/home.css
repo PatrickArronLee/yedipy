@@ -1,0 +1,1124 @@
+/*
+  YediPy landing page styles.
+
+  Linked only from overrides/home.html, so these rules never load on the
+  regular docs pages. Every rule targets the landing markup (.yp-*), or a
+  Material element only when it contains that markup (:has(.yp-home)).
+  No external fonts, images or imports: system font stacks and inline SVG only.
+*/
+
+/* Tokens ----------------------------------------------------------------- */
+
+.yp-home,
+.yp-footer {
+  --yp-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Noto Color Emoji";
+  --yp-mono: ui-monospace, "Cascadia Code", "SF Mono", SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --yp-max: 60rem;
+  --yp-gutter: clamp(1rem, 4vw, 2rem);
+  --yp-radius: 0.9rem;
+
+  --yp-bg: #fff;
+  --yp-surface: #f4f5fb;
+  --yp-card: #fff;
+  --yp-line: #dde1f1;
+  --yp-ink: #12163b;
+  --yp-text: #2d3250;
+  --yp-muted: #4e5577;
+  --yp-link: #3446a6;
+  --yp-kicker: #ad3a0b;
+  --yp-flame: #f2711c;
+  --yp-glyph-bg: #eceefe;
+  --yp-glyph: #2d3a99;
+  --yp-focus: #1f2a7a;
+  --yp-shadow: 0 0.1rem 0.2rem rgb(18 22 59 / 5%),
+    0 0.6rem 1.6rem rgb(18 22 59 / 7%);
+  --yp-dot-now: #12996a;
+  --yp-dot-soon: #f2711c;
+
+  --yp-night: #12163b;
+  --yp-night-text: #d3d8f4;
+  --yp-night-muted: #b3bae4;
+
+  font-family: var(--yp-font);
+}
+
+[data-md-color-scheme="slate"] .yp-home,
+[data-md-color-scheme="slate"] .yp-footer {
+  --yp-bg: var(--md-default-bg-color);
+  --yp-surface: #181b22;
+  --yp-card: #252935;
+  --yp-line: #383d50;
+  --yp-ink: #f1f2fb;
+  --yp-text: #cdd1e4;
+  --yp-muted: #aab0ca;
+  --yp-link: #a9b5ff;
+  --yp-kicker: #ffa772;
+  --yp-glyph-bg: #313752;
+  --yp-glyph: #c9d0ff;
+  --yp-focus: #c9d0ff;
+  --yp-shadow: 0 0.6rem 1.6rem rgb(0 0 0 / 25%);
+  --yp-dot-now: #5fd4a5;
+  --yp-dot-soon: #ffa772;
+
+  --yp-night: #13162b;
+
+  --md-code-bg-color: #1b1e27;
+}
+
+/* Page frame (home page only) ---------------------------------------------- */
+
+.md-main__inner:has(> .yp-home) {
+  max-width: none;
+  margin-top: 0;
+}
+
+body:has(.yp-home) .md-header {
+  box-shadow: none;
+}
+
+.yp-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.yp-home a:focus-visible,
+.yp-footer a:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--yp-focus);
+  outline-offset: 3px;
+}
+
+.yp-hero a:focus-visible,
+.yp-section--night a:focus-visible,
+.yp-footer a:focus-visible {
+  outline-color: #ffd08a;
+}
+
+/* Buttons ------------------------------------------------------------------ */
+
+.yp-home a.yp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.3rem;
+  padding: 0.5rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.yp-btn__icon {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+.yp-home a.yp-btn--primary,
+.yp-home a.yp-btn--primary:is(:hover, :focus) {
+  background-color: #ffb547;
+  color: #191d47;
+}
+
+.yp-home a.yp-btn--primary:hover {
+  background-color: #ffc872;
+}
+
+.yp-home a.yp-btn--glass,
+.yp-home a.yp-btn--glass:is(:hover, :focus) {
+  border-color: rgb(255 255 255 / 55%);
+  background-color: rgb(255 255 255 / 10%);
+  color: #fff;
+}
+
+.yp-home a.yp-btn--glass:hover {
+  border-color: #fff;
+  background-color: rgb(255 255 255 / 14%);
+}
+
+.yp-home a.yp-btn--outline,
+.yp-home a.yp-btn--outline:is(:hover, :focus) {
+  border-color: var(--yp-link);
+  background-color: transparent;
+  color: var(--yp-link);
+}
+
+.yp-home a.yp-btn--outline:hover {
+  background-color: var(--yp-glyph-bg);
+}
+
+/* Hero --------------------------------------------------------------------- */
+
+.yp-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--yp-gutter)
+    clamp(4.5rem, 9vw, 7rem);
+  background:
+    radial-gradient(32rem 22rem at 88% 16%, rgb(255 140 66 / 26%), transparent 70%),
+    radial-gradient(30rem 24rem at 4% 96%, rgb(120 146 255 / 28%), transparent 70%),
+    linear-gradient(180deg, var(--md-primary-fg-color) 0%, #2d3790 48%, #181d55 100%);
+  color: #fff;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - clamp(1.25rem, 4vw, 3rem)), 0 100%);
+}
+
+.yp-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 7%) 1px, transparent 1px);
+  background-size: 1.6rem 1.6rem;
+  -webkit-mask-image: radial-gradient(70% 80% at 70% 30%, #000, transparent);
+  mask-image: radial-gradient(70% 80% at 70% 30%, #000, transparent);
+}
+
+.yp-hero__inner {
+  display: grid;
+  gap: 2.75rem;
+  align-items: center;
+  max-width: var(--yp-max);
+  margin: 0 auto;
+}
+
+.yp-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 1.1rem;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.yp-eyebrow__mark {
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: none;
+}
+
+.yp-hero__title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.8rem, 1rem + 3vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.yp-hero__lede {
+  max-width: 32rem;
+  margin: 1.1rem 0 0;
+  color: #e4e8ff;
+  font-size: clamp(0.9rem, 0.8rem + 0.45vw, 1.1rem);
+  line-height: 1.5;
+}
+
+.yp-hero__actions,
+.yp-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+}
+
+.yp-hero__actions {
+  gap: 0.7rem;
+  margin: 1.8rem 0 0;
+}
+
+.yp-hero__facts {
+  gap: 0.45rem 1.1rem;
+  margin: 1.6rem 0 0;
+  color: #d2d8ff;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.yp-hero__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.yp-hero__facts li::before {
+  content: "";
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: #ffb547;
+}
+
+/* Hero demo: an X12 claim read in Python, with the yeti peeking over it. */
+
+.yp-demo {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding-top: 3.1rem;
+}
+
+.yp-demo__peek {
+  position: absolute;
+  top: 0;
+  right: 7.4rem;
+  width: 4.6rem;
+  height: 3.1rem;
+  overflow: hidden;
+}
+
+.yp-demo__yeti {
+  display: block;
+  width: 4.6rem;
+  height: 4.6rem;
+  margin-top: 0.15rem;
+}
+
+.yp-demo__paws {
+  position: absolute;
+  z-index: 2;
+  top: 2.62rem;
+  right: 7.1rem;
+  width: 5.2rem;
+  height: 0.94rem;
+}
+
+.yp-demo__card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: var(--yp-radius);
+  background: #0e1131;
+  box-shadow: 0 1.5rem 3rem rgb(6 8 32 / 45%);
+}
+
+.yp-demo__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+  color: #aab3e6;
+  font: 600 0.6rem/1.2 var(--yp-mono);
+}
+
+.yp-demo__dots {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.yp-demo__dots i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #ff6b5e;
+}
+
+.yp-demo__dots i:nth-child(2) {
+  background: #ffbf47;
+}
+
+.yp-demo__dots i:nth-child(3) {
+  background: #3fd08b;
+}
+
+.yp-demo__tag {
+  margin-left: auto;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(255 181 71 / 14%);
+  color: #ffcf85;
+}
+
+.yp-demo__code {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow: hidden;
+  color: #e0e5ff;
+  font: 0.62rem/1.75 var(--yp-mono);
+  white-space: pre;
+}
+
+.yp-demo__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0 1rem;
+  color: #9aa5e6;
+  font: 700 0.52rem/1 var(--yp-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.yp-demo__divider::before,
+.yp-demo__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.yp-x12-id {
+  color: #ffb547;
+  font-weight: 700;
+}
+
+.yp-x12-sep,
+.yp-py-prompt {
+  color: #8592da;
+}
+
+.yp-py-comment {
+  color: #9aa3d4;
+  font-style: italic;
+}
+
+.yp-py-out {
+  color: #6fe0b0;
+}
+
+/* Content sections --------------------------------------------------------- */
+
+.yp-home .yp-content {
+  color: var(--yp-text);
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.yp-section {
+  padding: clamp(3rem, 8vw, 5.5rem)
+    max(var(--yp-gutter), (100% - var(--yp-max)) / 2);
+  background: var(--yp-bg);
+}
+
+.yp-section--tint {
+  background: var(--yp-surface);
+}
+
+.yp-home .yp-content h2 {
+  margin: 0;
+  color: var(--yp-ink);
+  font-size: clamp(1.6rem, 1.1rem + 1.9vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.yp-home .yp-content h3 {
+  margin: 0 0 0.45rem;
+  color: var(--yp-ink);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.yp-home .yp-content .yp-kicker {
+  margin: 0 0 0.7rem;
+  color: var(--yp-kicker);
+  font: 700 0.62rem/1.3 var(--yp-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.yp-home .yp-content .yp-lead {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: var(--yp-muted);
+  font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  line-height: 1.6;
+}
+
+.yp-home .yp-content a:not(.yp-btn) {
+  color: var(--yp-link);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+.yp-home .yp-content a:not(.yp-btn):hover {
+  color: var(--yp-ink);
+  text-decoration-thickness: 0.14em;
+}
+
+.yp-emoji {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-style: normal;
+}
+
+/* Manifesto ---------------------------------------------------------------- */
+
+.yp-chapters {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  counter-reset: yp-chapter;
+}
+
+.yp-chapter {
+  position: relative;
+  display: grid;
+  row-gap: 1rem;
+  padding: 0 0 2.4rem 1.8rem;
+  border-left: 2px solid var(--yp-line);
+  counter-increment: yp-chapter;
+}
+
+.yp-chapter:last-child {
+  padding-bottom: 0.4rem;
+}
+
+.yp-chapter::before {
+  content: "";
+  position: absolute;
+  top: 0.25rem;
+  left: calc(-0.45rem - 1px);
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--yp-flame);
+  border-radius: 50%;
+  background: var(--yp-bg);
+}
+
+.yp-home .yp-content .yp-chapter > * {
+  margin: 0;
+}
+
+.yp-home .yp-content .yp-chapter > h3 {
+  font-size: 1.05rem;
+}
+
+.yp-chapter > h3::before {
+  content: counter(yp-chapter, decimal-leading-zero);
+  content: counter(yp-chapter, decimal-leading-zero) / "";
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--yp-kicker);
+  font: 700 0.6rem/1.2 var(--yp-mono);
+  letter-spacing: 0.12em;
+}
+
+.yp-home .yp-content .yp-chapter > p {
+  max-width: 38rem;
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.yp-home .yp-content .yp-chapter > .yp-punch {
+  padding-left: 1rem;
+  border-left: 0.3rem solid var(--yp-flame);
+  color: var(--yp-ink);
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.yp-home .yp-content .yp-chapter > .yp-pledge {
+  padding: 1.3rem 1.5rem;
+  border-radius: var(--yp-radius);
+  background: linear-gradient(135deg, #4051b5, #262f85);
+  box-shadow: 0 1rem 2rem rgb(38 47 133 / 25%);
+  color: #fff;
+  font-size: clamp(0.95rem, 0.9rem + 0.35vw, 1.15rem);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.yp-home .yp-content .yp-chapter > .yp-signoff {
+  color: var(--yp-ink);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+/* What works today --------------------------------------------------------- */
+
+.yp-features,
+.yp-split,
+.yp-roles {
+  display: grid;
+  gap: 1rem;
+}
+
+.yp-features,
+.yp-roles {
+  margin-top: 2rem;
+}
+
+.yp-split {
+  margin-top: 1rem;
+}
+
+.yp-feature,
+.yp-panel,
+.yp-role {
+  min-width: 0;
+  padding: 1.4rem 1.4rem 1.5rem;
+  border: 1px solid var(--yp-line);
+  border-radius: var(--yp-radius);
+  background: var(--yp-card);
+  box-shadow: var(--yp-shadow);
+}
+
+.yp-feature::before {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 1rem;
+  border-radius: 0.7rem;
+  background: var(--yp-glyph-bg);
+  color: var(--yp-glyph);
+  font: 800 0.75rem/1 var(--yp-mono);
+}
+
+.yp-feature--lexer::before {
+  content: "*~";
+  content: "*~" / "";
+}
+
+.yp-feature--models::before {
+  content: "{ }";
+  content: "{ }" / "";
+}
+
+.yp-feature--cli::before {
+  content: ">_";
+  content: ">_" / "";
+}
+
+.yp-home .yp-content :is(.yp-feature, .yp-role) p {
+  margin: 0;
+  color: var(--yp-muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.yp-home .yp-content .yp-panel > :first-child {
+  margin-top: 0;
+}
+
+.yp-home .yp-content .yp-panel pre {
+  margin: 0.5rem 0 0;
+}
+
+/* Wrap long commands instead of creating scroll areas that keyboards cannot reach. */
+.yp-home .yp-content pre > code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.yp-home .yp-content .yp-install-label {
+  position: relative;
+  margin: 1.1rem 0 0;
+  padding-left: 1rem;
+  color: var(--yp-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.yp-home .yp-content h3 + .yp-install-label {
+  margin-top: 0.6rem;
+}
+
+.yp-install-label::before {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--yp-muted);
+}
+
+.yp-install-label--now::before {
+  background: var(--yp-dot-now);
+}
+
+.yp-install-label--soon::before {
+  background: var(--yp-dot-soon);
+}
+
+.yp-home .yp-content .yp-note {
+  max-width: 46rem;
+  margin: 2rem 0 0;
+  padding: 0.9rem 1.1rem;
+  border-left: 0.25rem solid var(--yp-flame);
+  border-radius: 0.4rem;
+  background: var(--yp-card);
+  color: var(--yp-muted);
+  font-size: 0.8rem;
+}
+
+.yp-home .yp-content .yp-readmore ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yp-home .yp-content .yp-readmore li {
+  margin: 0;
+}
+
+.yp-home .yp-content .yp-readmore a {
+  display: inline-flex;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--yp-line);
+  border-radius: 999px;
+  background: var(--yp-card);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.yp-home .yp-content .yp-readmore a:hover {
+  border-color: var(--yp-link);
+  color: var(--yp-link);
+}
+
+/* Roadmap ------------------------------------------------------------------ */
+
+.yp-section--night {
+  background:
+    radial-gradient(40rem 20rem at 85% 0%, rgb(255 140 66 / 16%), transparent 70%),
+    radial-gradient(40rem 24rem at 0% 100%, rgb(98 120 255 / 20%), transparent 70%),
+    var(--yp-night);
+  color: var(--yp-night-text);
+}
+
+.yp-home .yp-content .yp-section--night :is(h2, h3) {
+  color: #fff;
+}
+
+.yp-home .yp-content .yp-section--night .yp-kicker {
+  color: #ffb37a;
+}
+
+.yp-home .yp-content .yp-section--night .yp-lead {
+  color: var(--yp-night-muted);
+}
+
+.yp-home .yp-content .yp-section--night code {
+  background: rgb(255 255 255 / 9%);
+  color: #e5e9ff;
+}
+
+.yp-home .yp-content .yp-roadmap {
+  display: grid;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yp-home .yp-content .yp-roadmap > li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 0 2rem 2.6rem;
+}
+
+.yp-home .yp-content .yp-roadmap > li:last-child {
+  padding-bottom: 0;
+}
+
+.yp-roadmap > li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #aab4ff;
+  border-radius: 50%;
+  background: var(--yp-night);
+  color: #0b2a1e;
+  font: 800 0.7rem/1 var(--yp-font);
+}
+
+.yp-roadmap > li::after {
+  content: "";
+  position: absolute;
+  top: 1.75rem;
+  bottom: 0.25rem;
+  left: calc(0.75rem - 1px);
+  border-left: 2px dashed rgb(174 182 227 / 45%);
+}
+
+.yp-roadmap > li:last-child::after {
+  display: none;
+}
+
+.yp-roadmap > .yp-step--available::before {
+  content: "\2713";
+  content: "\2713" / "";
+  border-color: #5fd4a5;
+  background: #5fd4a5;
+  box-shadow: 0 0 0 0.3rem rgb(95 212 165 / 18%);
+}
+
+.yp-roadmap > .yp-step--available::after {
+  border-left-style: solid;
+  border-color: #5fd4a5;
+}
+
+.yp-roadmap > .yp-step--next::before {
+  border-color: #ffb547;
+  background: radial-gradient(circle, #ffb547 0 0.28rem, var(--yp-night) 0.3rem);
+  box-shadow: 0 0 0 0.3rem rgb(255 181 71 / 16%);
+}
+
+.yp-roadmap > .yp-step--target::before {
+  border-style: dashed;
+  border-color: #ff9c6b;
+}
+
+.yp-home .yp-content .yp-roadmap .yp-status {
+  order: -1;
+  align-self: flex-start;
+  margin: 0 0 0.7rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: rgb(170 180 255 / 14%);
+  color: #c4ccff;
+  font: 700 0.56rem/1.5 var(--yp-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.yp-home .yp-content .yp-step--available .yp-status {
+  background: rgb(95 212 165 / 14%);
+  color: #7fe3bb;
+}
+
+.yp-home .yp-content .yp-step--next .yp-status {
+  background: rgb(255 181 71 / 14%);
+  color: #ffcb7a;
+}
+
+.yp-home .yp-content .yp-step--target .yp-status {
+  background: rgb(255 156 107 / 14%);
+  color: #ffb592;
+}
+
+.yp-home .yp-content .yp-roadmap p:not(.yp-status) {
+  margin: 0;
+  color: var(--yp-night-muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* Contributors ------------------------------------------------------------- */
+
+.yp-role {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 0.25rem solid var(--yp-role-accent, var(--yp-flame));
+}
+
+.yp-role--contributors {
+  --yp-role-accent: #4051b5;
+}
+
+.yp-role--maintainers {
+  --yp-role-accent: #12996a;
+}
+
+.yp-home .yp-content .yp-role > h3 {
+  margin: 0;
+}
+
+.yp-home .yp-content .yp-role > p:last-child {
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+.yp-home .yp-content .yp-role > p:last-child a {
+  font-weight: 700;
+}
+
+.yp-role > p:last-child a::after {
+  content: " \2192";
+  content: " \2192" / "";
+}
+
+.yp-home .yp-content .yp-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 2rem 0 0;
+}
+
+/* Footer ------------------------------------------------------------------- */
+
+.yp-footer {
+  background: #0d1030;
+  color: #c5cbec;
+  font-size: 0.75rem;
+}
+
+[data-md-color-scheme="slate"] .yp-footer {
+  background: #111320;
+}
+
+.yp-footer__inner {
+  display: grid;
+  gap: 2rem;
+  max-width: var(--yp-max);
+  margin: 0 auto;
+  padding: 3rem var(--yp-gutter) 2rem;
+}
+
+.yp-footer__brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  max-width: 22rem;
+}
+
+.yp-footer__mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: none;
+}
+
+.yp-footer__brand p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.yp-footer__brand strong {
+  display: block;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.yp-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 3.5rem;
+}
+
+.yp-footer__heading {
+  margin: 0 0 0.6rem;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.yp-footer ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yp-footer a {
+  color: #e3e7ff;
+  text-decoration: none;
+}
+
+.yp-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.yp-footer__legal {
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.yp-footer .md-copyright {
+  width: auto;
+  max-width: var(--yp-max);
+  margin: 0 auto;
+  padding: 1.1rem var(--yp-gutter) 1.4rem;
+  color: #aab2dd;
+  font-size: 0.65rem;
+}
+
+.yp-footer .md-copyright__highlight {
+  color: #d7dcf7;
+}
+
+.yp-footer .md-copyright a {
+  text-decoration: underline;
+}
+
+/* Responsive layout -------------------------------------------------------- */
+
+@media screen and (max-width: 29.9375em) {
+  .yp-home a.yp-btn {
+    width: 100%;
+  }
+
+  .yp-hero__actions > li {
+    flex: 1 1 100%;
+  }
+
+  .yp-demo__code {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.52rem;
+  }
+
+  .yp-feature,
+  .yp-panel,
+  .yp-role {
+    padding: 1.1rem 1rem 1.2rem;
+  }
+
+  .yp-home .yp-content .yp-panel pre > code {
+    font-size: 0.78em;
+  }
+}
+
+@media screen and (min-width: 45em) {
+  .yp-footer__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .yp-hero__inner {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: 3rem;
+  }
+
+  .yp-chapter {
+    grid-template-columns: 11rem minmax(0, 1fr);
+    column-gap: 2.5rem;
+    padding-left: 2.2rem;
+  }
+
+  .yp-chapter > * {
+    grid-column: 2;
+  }
+
+  .yp-chapter > h3 {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .yp-features,
+  .yp-roles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .yp-home .yp-content .yp-roadmap {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+
+  .yp-home .yp-content .yp-roadmap > li {
+    padding: 2.6rem 0 0;
+  }
+
+  .yp-roadmap > li::after {
+    top: calc(0.75rem - 1px);
+    right: -1.1rem;
+    bottom: auto;
+    left: 2.1rem;
+    border-top: 2px dashed rgb(174 182 227 / 45%);
+    border-left: 0;
+  }
+
+  .yp-roadmap > .yp-step--available::after {
+    border-top-style: solid;
+    border-top-color: #5fd4a5;
+  }
+}
+
+@media screen and (min-width: 76.25em) {
+  .yp-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .yp-home .yp-content .yp-panel--install pre > code {
+    font-size: 0.75em;
+  }
+}
+
+/* Motion: only when the user has not asked for less ------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .yp-demo {
+    animation: yp-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s both;
+  }
+
+  .yp-demo__yeti {
+    animation: yp-peek 0.6s cubic-bezier(0.3, 1.5, 0.6, 1) 0.75s both;
+  }
+
+  .yp-demo__paws {
+    animation: yp-fade 0.3s ease-out 1.15s both;
+  }
+
+  .yp-home a.yp-btn,
+  .yp-home .yp-content .yp-readmore a {
+    transition: transform 0.15s ease, background-color 0.15s ease,
+      border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .yp-home a.yp-btn:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes yp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+@keyframes yp-peek {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes yp-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Windows high contrast and other forced-colour modes ---------------------- */
+
+@media (forced-colors: active) {
+  .yp-chapter::before,
+  .yp-roadmap > li::before {
+    border-color: CanvasText;
+  }
+
+  .yp-hero__facts li::before,
+  .yp-install-label::before {
+    background: CanvasText;
+  }
+}
